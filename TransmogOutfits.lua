@@ -1,6 +1,7 @@
 transmogOutfitSelect = false
 transmogOutfitSets = false
 transmogOutfitPage = 1
+transmogOutfitWardrobeTab = 1
 transmogOutfitNumPages = 1
 transmogOutfitCurrentOutfit = 1
 transmogOutfitFoundOutfits = {}
@@ -72,8 +73,7 @@ function transmogOutfitFrameOnEvent(self, event, arg1)
 		transmogOutfitSelect = false
 		transmogOutfitSets = false
 		WardrobeCollectionFrame.FilterButton:Show()
-		WardrobeCollectionFrameTab1:Show()
-		WardrobeCollectionFrameTab2:Show()
+		WardrobeCollectionFrame:SetTab(1)
 		self:RegisterEvent("TRANSMOGRIFY_UPDATE")
 	end
 end
@@ -104,8 +104,8 @@ function transmogOutfitShowSelectFrame()
 	WardrobeCollectionFrame.ItemsCollectionFrame:Hide()
 	WardrobeCollectionFrame.SetsTransmogFrame:Hide()
 	WardrobeCollectionFrame.FilterButton:Hide()
-	WardrobeCollectionFrameTab1:Hide()
-	WardrobeCollectionFrameTab2:Hide()
+	transmogOutfitWardrobeTab = WardrobeCollectionFrame.selectedTransmogTab
+	WardrobeCollectionFrame:SetTab(0)
 	WardrobeCollectionFrameSearchBox:Hide()
 	local scale = WardrobeTransmogFrame.ModelScene:GetPlayerActor():GetScale()
 	local _, race = UnitRace("player")
@@ -143,8 +143,7 @@ function transmogOutfitHideSelectFrame()
 		WardrobeCollectionFrame.ItemsCollectionFrame:Show()
 	end
 	WardrobeCollectionFrame.FilterButton:Show()
-	WardrobeCollectionFrameTab1:Show()
-	WardrobeCollectionFrameTab2:Show()
+	WardrobeCollectionFrame:SetTab(transmogOutfitWardrobeTab)
 	WardrobeCollectionFrameSearchBox:Show()
 	transmogOutfitSelectFrame:Hide()
 	transmogOutfitSelect = false
@@ -506,6 +505,16 @@ function TransmogOutfitNextPage()
 		transmogOutfitPage = transmogOutfitPage
 	end
 end
+
+function TransmogOutfitWardrobeTabOnClick(self)
+	transmogOutfitHideSelectFrame();
+	WardrobeCollectionFrame:ClickTab(self)
+end
+
+function TransmogOutfitWardrobeSlotOnClick(self, button)
+	transmogOutfitHideSelectFrame();
+	self:OnClick(button)
+end
 	
 function transmogOutfitFrameCreate(frame)
 	if WardrobeTransmogFrame:IsVisible() then
@@ -526,6 +535,22 @@ function transmogOutfitFrameCreate(frame)
 		frame:SetPoint("BOTTOMRIGHT", WardrobeTransmogFrame, "TOPRIGHT", 0, 0)
 		frame:SetParent(WardrobeTransmogFrame)
 		frame:Show()
+		WardrobeCollectionFrameTab1:SetScript("OnClick", TransmogOutfitWardrobeTabOnClick)
+		WardrobeCollectionFrameTab2:SetScript("OnClick", TransmogOutfitWardrobeTabOnClick)
+		WardrobeTransmogFrame.HeadButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+		WardrobeTransmogFrame.ShoulderButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+		WardrobeTransmogFrame.SecondaryShoulderButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+		WardrobeTransmogFrame.BackButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+		WardrobeTransmogFrame.ChestButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+		WardrobeTransmogFrame.ShirtButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+		WardrobeTransmogFrame.TabardButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+		WardrobeTransmogFrame.WristButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+		WardrobeTransmogFrame.HandsButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+		WardrobeTransmogFrame.WaistButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+		WardrobeTransmogFrame.LegsButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+		WardrobeTransmogFrame.FeetButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+		WardrobeTransmogFrame.MainHandButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+		WardrobeTransmogFrame.SecondaryHandButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
 		TransmogOutfitSetupNameFrame(transmogOutfitNameFrame, transmogOutfitNameText)
 		if transmogOutfitSelectFrame == nil then
 			transmogOutfitSelectFrame = CreateFrame("FRAME", nil, WardrobeCollectionFrame, "CollectionsBackgroundTemplate")
