@@ -67,9 +67,15 @@ function transmogOutfitFrameOnEvent(self, event, arg1)
 		transmogOutfitFrameCreate(self)
 		self:UnregisterEvent("TRANSMOGRIFY_UPDATE")
 	elseif event == "TRANSMOGRIFY_CLOSE" then
-		transmogOutfitNewFrame:Hide()
-		transmogOutfitSelectFrame:Hide()
-		transmogOutfitRemoveFrame:Hide()
+		if transmogOutfitNewFrame ~= nil then
+			transmogOutfitNewFrame:Hide()
+		end
+		if transmogOutfitSelectFrame ~= nil then
+			transmogOutfitSelectFrame:Hide()
+		end
+		if transmogOutfitRemoveFrame ~= nil then
+			transmogOutfitRemoveFrame:Hide()
+		end
 		transmogOutfitSelect = false
 		transmogOutfitSets = false
 		WardrobeCollectionFrame.FilterButton:Show()
@@ -517,7 +523,7 @@ function TransmogOutfitWardrobeSlotOnClick(self, button)
 end
 	
 function transmogOutfitFrameCreate(frame)
-	if WardrobeTransmogFrame:IsVisible() then
+	if WardrobeTransmogFrame ~= nil and WardrobeTransmogFrame:IsVisible() then
 		WardrobeOutfitDropDown:Hide()
 		transmogOutfitFoundOutfits = {}
 		local blizzardOutfits = C_TransmogCollection.GetOutfits()
