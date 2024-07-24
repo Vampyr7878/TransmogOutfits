@@ -30,7 +30,8 @@ local transmogOutfitsMaleTranslate = {["Human"]              = 1.00,
 									  ["ZandalariTroll"]     = 1.45,
 									  ["Mechagnome"]         = 0.85,
 									  ["Vulpera"]            = 0.95,
-									  ["Dracthyr"]			 = 2.30}
+									  ["Dracthyr"]			 = 2.30,
+									  ["EarthenDwarf"]       = 1.00}
 							  
 local transmogOutfitsFemaleTranslate = {["Human"]              = 1.00,
 										["Orc"]                = 1.20,
@@ -55,7 +56,8 @@ local transmogOutfitsFemaleTranslate = {["Human"]              = 1.00,
 										["ZandalariTroll"]     = 1.65,
 										["Mechagnome"]         = 0.85,
 										["Vulpera"]            = 1.05,
-										["Dracthyr"]			 = 2.30}
+										["Dracthyr"]		   = 2.30,
+										["EarthenDwarf"]       = 1.00}
 
 function transmogOutfitFrameOnEvent(self, event, arg1)
 	if event == "ADDON_LOADED" and arg1 == "TransmogOutfits" then
@@ -548,7 +550,7 @@ end
 	
 function transmogOutfitFrameCreate(frame)
 	if WardrobeTransmogFrame ~= nil and WardrobeTransmogFrame:IsVisible() then
-		WardrobeOutfitDropDown:Hide()
+		WardrobeTransmogFrame.OutfitDropdown:Hide()
 		transmogOutfitFoundOutfits = {}
 		local blizzardOutfits = C_TransmogCollection.GetOutfits()
 		for i = 1, table.getn(blizzardOutfits) do
