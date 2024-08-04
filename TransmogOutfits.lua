@@ -65,7 +65,7 @@ function transmogOutfitFrameOnEvent(self, event, arg1)
 		if transmogOutfitOutfits == nil then
 			transmogOutfitOutfits = {}
 		end
-	elseif event == "TRANSMOGRIFY_UPDATE" then
+	elseif event == "TRANSMOGRIFY_UPDATE" and WardrobeTransmogFrame ~= nil and WardrobeTransmogFrame:IsVisible() then
 		transmogOutfitFrameCreate(self)
 		self:UnregisterEvent("TRANSMOGRIFY_UPDATE")
 	elseif event == "TRANSMOGRIFY_CLOSE" then
@@ -406,7 +406,7 @@ function TransmogOutfitRemoveOutfit()
 		name = C_TransmogCollection.GetOutfitInfo(blizzardOutfits[transmogOutfitCurrentOutfit])
 	end
 	transmogOutfitRemoveFrame:Show()
-	transmogOutfitRemoveText:SetText("\n\nDo realy want to remove outfit\nnamed " .. name .. "?")
+	transmogOutfitRemoveText:SetText("\n\nDo you really want to remove outfit\nnamed " .. name .. "?")
 end
 
 function TransmogOutfitRemoveYes()
@@ -549,86 +549,84 @@ function TransmogOutfitWardrobeSlotOnClick(self, button)
 end
 	
 function transmogOutfitFrameCreate(frame)
-	if WardrobeTransmogFrame ~= nil and WardrobeTransmogFrame:IsVisible() then
-		WardrobeTransmogFrame.OutfitDropdown:Hide()
-		transmogOutfitFoundOutfits = {}
-		local blizzardOutfits = C_TransmogCollection.GetOutfits()
-		for i = 1, table.getn(blizzardOutfits) do
-			transmogOutfitFoundOutfits[i] = {}
-			transmogOutfitFoundOutfits[i].index = i
-			transmogOutfitFoundOutfits[i].name = C_TransmogCollection.GetOutfitInfo(blizzardOutfits[i])
-		end
-		transmogOutfitFoundBlizzardOutfits = table.getn(transmogOutfitFoundOutfits)
-		for i = 1, table.getn(transmogOutfitOutfits) do
-			transmogOutfitFoundOutfits[i + transmogOutfitFoundBlizzardOutfits] = {}
-			transmogOutfitFoundOutfits[i + transmogOutfitFoundBlizzardOutfits].index = i + table.getn(blizzardOutfits)
-			transmogOutfitFoundOutfits[i + transmogOutfitFoundBlizzardOutfits].name = transmogOutfitOutfits[i]["name"]
-		end
-		frame:SetFrameStrata("TOOLTIP")
-		frame:SetWidth(WardrobeTransmogFrame:GetWidth()) 
-		frame:SetHeight(50)
-		frame:ClearAllPoints()
-		frame:SetPoint("BOTTOMRIGHT", WardrobeTransmogFrame, "TOPRIGHT", 0, 0)
-		frame:SetParent(WardrobeTransmogFrame)
-		frame:Show()
-		WardrobeCollectionFrameTab1:SetScript("OnClick", TransmogOutfitWardrobeTabOnClick)
-		WardrobeCollectionFrameTab2:SetScript("OnClick", TransmogOutfitWardrobeTabOnClick)
-		WardrobeTransmogFrame.HeadButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
-		WardrobeTransmogFrame.ShoulderButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
-		WardrobeTransmogFrame.SecondaryShoulderButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
-		WardrobeTransmogFrame.BackButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
-		WardrobeTransmogFrame.ChestButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
-		WardrobeTransmogFrame.ShirtButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
-		WardrobeTransmogFrame.TabardButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
-		WardrobeTransmogFrame.WristButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
-		WardrobeTransmogFrame.HandsButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
-		WardrobeTransmogFrame.WaistButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
-		WardrobeTransmogFrame.LegsButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
-		WardrobeTransmogFrame.FeetButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
-		WardrobeTransmogFrame.MainHandButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
-		WardrobeTransmogFrame.SecondaryHandButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
-		TransmogOutfitSetupNameFrame(transmogOutfitNameFrame, transmogOutfitNameText)
-		if transmogOutfitSelectFrame == nil then
-			transmogOutfitSelectFrame = CreateFrame("FRAME", nil, WardrobeCollectionFrame, "CollectionsBackgroundTemplate")
-			transmogOutfitSelectFrame:SetScript("OnShow", transmogOutfitSelectFrameOnShow)
-			ModelFrames(transmogOutfitSelectFrame)
-			transmogOutfitRandomButton = CreateFrame("BUTTON", nil, transmogOutfitSelectFrame, "UIPanelButtonTemplate")
-			TransmogOutfitSetupButton(transmogOutfitRandomButton, "Select Random", 100)
-			transmogOutfitRandomButton:SetPoint("TOPRIGHT", transmogOutfitSelectFrame, "TOPRIGHT")
-			transmogOutfitDoneButton = CreateFrame("BUTTON", nil, transmogOutfitSelectFrame, "UIPanelButtonTemplate")
-			TransmogOutfitSetupButton(transmogOutfitDoneButton, "Done", 100)
-			transmogOutfitDoneButton:SetPoint("BOTTOMRIGHT", transmogOutfitSelectFrame, "BOTTOMRIGHT")
-			transmogOutfitSelectSearchBox = CreateFrame("EDITBOX", nil, transmogOutfitSelectFrame, "InputBoxTemplate")
-			TransmogOutfitSetupEditBox(transmogOutfitSelectSearchBox, 120)
-			transmogOutfitSelectSearchBox:SetAutoFocus(false)
-			transmogOutfitSelectSearchBox:SetPoint("BOTTOMRIGHT", transmogOutfitSelectFrame, "TOPRIGHT", -100, 0)
-			transmogOutfitSelectSearchButton = CreateFrame("BUTTON", nil, transmogOutfitSelectFrame, "UIPanelButtonTemplate")
-			TransmogOutfitSetupButton(transmogOutfitSelectSearchButton, "Search", 100)
-			transmogOutfitSelectSearchButton:SetFrameStrata("TOOLTIP")
-			transmogOutfitSelectSearchButton:SetPoint("BOTTOMRIGHT", transmogOutfitSelectFrame, "TOPRIGHT", 0, 0)
-			transmogOutfitSelectSortButton = CreateFrame("BUTTON", nil, transmogOutfitSelectFrame, "UIPanelButtonTemplate")
-			TransmogOutfitSetupButton(transmogOutfitSelectSortButton, "Sort: A-Z", 100)
-			transmogOutfitSelectSortButton:SetFrameStrata("TOOLTIP")
-			transmogOutfitSelectSortButton:SetPoint("TOPLEFT", transmogOutfitSelectFrame, "TOPLEFT", 0, 0)
-			transmogOutfitPages = CreateFrame("FRAME", nil, transmogOutfitSelectFrame, nil)
-			transmogOutfitPages:SetPoint("BOTTOM", transmogOutfitSelectFrame, "BOTTOM", 0, 20)
-			transmogOutfitPages:SetFrameStrata("TOOLTIP")
-			transmogOutfitPages:SetWidth(150)
-			transmogOutfitPages:SetHeight(50)
-			transmogOutfitPagesText = transmogOutfitPages:CreateFontString(nil, "OVERLAY", "GameFontWhite")
-			transmogOutfitPagesText:ClearAllPoints()
-			transmogOutfitPagesText:SetAllPoints(transmogOutfitPages) 
-			transmogOutfitPagesText:SetJustifyH("CENTER")
-			transmogOutfitPagesText:SetJustifyV("MIDDLE")
-			transmogOutfitPrevPageButton = CreateFrame("BUTTON", nil, transmogOutfitPages, "UIPanelButtonTemplate")
-			TransmogOutfitSetupButton(transmogOutfitPrevPageButton, "<", 25)
-			transmogOutfitPrevPageButton:SetPoint("LEFT", transmogOutfitPages, "LEFT", 0, 0)
-			transmogOutfitNextPageButton = CreateFrame("BUTTON", nil, transmogOutfitPages, "UIPanelButtonTemplate")
-			TransmogOutfitSetupButton(transmogOutfitNextPageButton, ">", 25)
-			transmogOutfitNextPageButton:SetPoint("RIGHT", transmogOutfitPages, "RIGHT", 0, 0)
-		end
-		transmogOutfitSelectFrame:Hide()
+	WardrobeTransmogFrame.OutfitDropdown:Hide()
+	transmogOutfitFoundOutfits = {}
+	local blizzardOutfits = C_TransmogCollection.GetOutfits()
+	for i = 1, table.getn(blizzardOutfits) do
+		transmogOutfitFoundOutfits[i] = {}
+		transmogOutfitFoundOutfits[i].index = i
+		transmogOutfitFoundOutfits[i].name = C_TransmogCollection.GetOutfitInfo(blizzardOutfits[i])
 	end
+	transmogOutfitFoundBlizzardOutfits = table.getn(transmogOutfitFoundOutfits)
+	for i = 1, table.getn(transmogOutfitOutfits) do
+		transmogOutfitFoundOutfits[i + transmogOutfitFoundBlizzardOutfits] = {}
+		transmogOutfitFoundOutfits[i + transmogOutfitFoundBlizzardOutfits].index = i + table.getn(blizzardOutfits)
+		transmogOutfitFoundOutfits[i + transmogOutfitFoundBlizzardOutfits].name = transmogOutfitOutfits[i]["name"]
+	end
+	frame:SetFrameStrata("TOOLTIP")
+	frame:SetWidth(WardrobeTransmogFrame:GetWidth()) 
+	frame:SetHeight(50)
+	frame:ClearAllPoints()
+	frame:SetPoint("BOTTOMRIGHT", WardrobeTransmogFrame, "TOPRIGHT", 0, 0)
+	frame:SetParent(WardrobeTransmogFrame)
+	frame:Show()
+	WardrobeCollectionFrameTab1:SetScript("OnClick", TransmogOutfitWardrobeTabOnClick)
+	WardrobeCollectionFrameTab2:SetScript("OnClick", TransmogOutfitWardrobeTabOnClick)
+	WardrobeTransmogFrame.HeadButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+	WardrobeTransmogFrame.ShoulderButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+	WardrobeTransmogFrame.SecondaryShoulderButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+	WardrobeTransmogFrame.BackButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+	WardrobeTransmogFrame.ChestButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+	WardrobeTransmogFrame.ShirtButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+	WardrobeTransmogFrame.TabardButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+	WardrobeTransmogFrame.WristButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+	WardrobeTransmogFrame.HandsButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+	WardrobeTransmogFrame.WaistButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+	WardrobeTransmogFrame.LegsButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+	WardrobeTransmogFrame.FeetButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+	WardrobeTransmogFrame.MainHandButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+	WardrobeTransmogFrame.SecondaryHandButton:SetScript("OnClick", TransmogOutfitWardrobeSlotOnClick)
+	TransmogOutfitSetupNameFrame(transmogOutfitNameFrame, transmogOutfitNameText)
+	if transmogOutfitSelectFrame == nil then
+		transmogOutfitSelectFrame = CreateFrame("FRAME", nil, WardrobeCollectionFrame, "CollectionsBackgroundTemplate")
+		transmogOutfitSelectFrame:SetScript("OnShow", transmogOutfitSelectFrameOnShow)
+		ModelFrames(transmogOutfitSelectFrame)
+		transmogOutfitRandomButton = CreateFrame("BUTTON", nil, transmogOutfitSelectFrame, "UIPanelButtonTemplate")
+		TransmogOutfitSetupButton(transmogOutfitRandomButton, "Select Random", 100)
+		transmogOutfitRandomButton:SetPoint("TOPRIGHT", transmogOutfitSelectFrame, "TOPRIGHT")
+		transmogOutfitDoneButton = CreateFrame("BUTTON", nil, transmogOutfitSelectFrame, "UIPanelButtonTemplate")
+		TransmogOutfitSetupButton(transmogOutfitDoneButton, "Done", 100)
+		transmogOutfitDoneButton:SetPoint("BOTTOMRIGHT", transmogOutfitSelectFrame, "BOTTOMRIGHT")
+		transmogOutfitSelectSearchBox = CreateFrame("EDITBOX", nil, transmogOutfitSelectFrame, "InputBoxTemplate")
+		TransmogOutfitSetupEditBox(transmogOutfitSelectSearchBox, 120)
+		transmogOutfitSelectSearchBox:SetAutoFocus(false)
+		transmogOutfitSelectSearchBox:SetPoint("BOTTOMRIGHT", transmogOutfitSelectFrame, "TOPRIGHT", -100, 0)
+		transmogOutfitSelectSearchButton = CreateFrame("BUTTON", nil, transmogOutfitSelectFrame, "UIPanelButtonTemplate")
+		TransmogOutfitSetupButton(transmogOutfitSelectSearchButton, "Search", 100)
+		transmogOutfitSelectSearchButton:SetFrameStrata("TOOLTIP")
+		transmogOutfitSelectSearchButton:SetPoint("BOTTOMRIGHT", transmogOutfitSelectFrame, "TOPRIGHT", 0, 0)
+		transmogOutfitSelectSortButton = CreateFrame("BUTTON", nil, transmogOutfitSelectFrame, "UIPanelButtonTemplate")
+		TransmogOutfitSetupButton(transmogOutfitSelectSortButton, "Sort: A-Z", 100)
+		transmogOutfitSelectSortButton:SetFrameStrata("TOOLTIP")
+		transmogOutfitSelectSortButton:SetPoint("TOPLEFT", transmogOutfitSelectFrame, "TOPLEFT", 0, 0)
+		transmogOutfitPages = CreateFrame("FRAME", nil, transmogOutfitSelectFrame, nil)
+		transmogOutfitPages:SetPoint("BOTTOM", transmogOutfitSelectFrame, "BOTTOM", 0, 20)
+		transmogOutfitPages:SetFrameStrata("TOOLTIP")
+		transmogOutfitPages:SetWidth(150)
+		transmogOutfitPages:SetHeight(50)
+		transmogOutfitPagesText = transmogOutfitPages:CreateFontString(nil, "OVERLAY", "GameFontWhite")
+		transmogOutfitPagesText:ClearAllPoints()
+		transmogOutfitPagesText:SetAllPoints(transmogOutfitPages) 
+		transmogOutfitPagesText:SetJustifyH("CENTER")
+		transmogOutfitPagesText:SetJustifyV("MIDDLE")
+		transmogOutfitPrevPageButton = CreateFrame("BUTTON", nil, transmogOutfitPages, "UIPanelButtonTemplate")
+		TransmogOutfitSetupButton(transmogOutfitPrevPageButton, "<", 25)
+		transmogOutfitPrevPageButton:SetPoint("LEFT", transmogOutfitPages, "LEFT", 0, 0)
+		transmogOutfitNextPageButton = CreateFrame("BUTTON", nil, transmogOutfitPages, "UIPanelButtonTemplate")
+		TransmogOutfitSetupButton(transmogOutfitNextPageButton, ">", 25)
+		transmogOutfitNextPageButton:SetPoint("RIGHT", transmogOutfitPages, "RIGHT", 0, 0)
+	end
+	transmogOutfitSelectFrame:Hide()
 end
 
 function ModelFrames(parent)
