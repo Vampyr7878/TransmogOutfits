@@ -219,7 +219,7 @@ function TransmogOutfitUpdateOutfit()
 	local blizzardOutfits = C_TransmogCollection.GetOutfits()
 	local index = TransmogOutfitFindBlizzardOutfit(name)
 	if index ~= nil then
-		local outfit = WardrobeOutfitMixin:GetItemTransmogInfoList()
+		local outfit = WardrobeOutfitDropdownOverrideMixin:GetItemTransmogInfoList()
 		C_TransmogCollection.ModifyOutfit(blizzardOutfits[index], outfit)
 	else
 		index = TransmogOutfitFindName(name)
