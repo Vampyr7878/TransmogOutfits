@@ -2,7 +2,9 @@
 ## Title: Transmog Outfits
 ## Notes: Allows to save more than 20 transmog outfits per character
 ## Author: Vampyr78
-## Version: 3.1.3
+## Version: 3.1.4
+## SavedVariables: transmogOutfitBlizzard
 ## SavedVariablesPerCharacter: transmogOutfitOutfits
 ## IconTexture: Interface\Icons\achievement_transmog_collections.blp
+embeds.xml
 TransmogOutfits.lua
