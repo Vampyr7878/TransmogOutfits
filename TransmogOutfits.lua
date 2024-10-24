@@ -76,11 +76,13 @@ function TransmogOutfits:FrameOnEvent(event, arg1)
 		if TransmogOutfits.RemoveFrame ~= nil then
 			TransmogOutfits.RemoveFrame:Hide()
 		end
+		self:Hide()
 		TransmogOutfits.Select = false
 		TransmogOutfits.Sets = false
 		WardrobeCollectionFrame.FilterButton:Show()
 		WardrobeCollectionFrame:SetTab(1)
 		self:RegisterEvent("TRANSMOGRIFY_UPDATE")
+		collectgarbage("collect")
 	end
 end
 
