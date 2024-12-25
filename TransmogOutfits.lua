@@ -117,10 +117,13 @@ function TransmogOutfits:ShowSelectFrame()
 	if race == "Dracthyr" and not alteredForm then
 		zoom = 1
 	end
-	for i = 1, 8 do
-		if self.InitCamera then
+	if self.InitCamera then
+		for i = 1, 8 do
 			self.Models[i]:SetCameraPosition(WardrobeTransmogFrame.ModelScene:GetCameraPosition())
 		end
+		self.InitCamera = false
+	end
+	for i = 1, 8 do
 		self.Models[i].actor:SetModelByUnit("player", false, true, false, not alteredForm)
 		self.Models[i]:SetPaused(true)
 		local file = self.Models[i].actor:GetModelFileID()
