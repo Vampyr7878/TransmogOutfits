@@ -2,87 +2,75 @@ local TransmogOutfits = LibStub("AceAddon-3.0"):NewAddon("TransmogOutfits")
 
 TransmogOutfits.FoundOutfits = {}
 TransmogOutfits.Select = false
-TransmogOutfits.Sets = false
 TransmogOutfits.Page = 1
-TransmogOutfits.WardrobeTab = 1
 TransmogOutfits.NumPages = 1
 TransmogOutfits.CurrentOutfit = 1
-TransmogOutfits.FoundBlizzardOutfits = 0
-TransmogOutfits.InitCamera = true
+TransmogOutfits.HookedSlots = {}
 
-TransmogOutfits.MaleTranslate = {["Human"]              = 1.00,
-								 ["Orc"]                = 1.20,
-								 ["Dwarf"]              = 1.00,
-								 ["Scourge"]            = 1.10,
-								 ["NightElf"]           = 1.30,
-								 ["Tauren"]             = 1.75,
-								 ["Gnome"]              = 0.70,
-								 ["Troll"]              = 0.85,
-								 ["Draenei"]            = 1.50,
-								 ["BloodElf"]           = 1.10,
-								 ["Worgen"]             = 1.05,
-								 ["Goblin"]             = 0.70,
-								 ["Pandaren"]           = 1.60,
-								 ["VoidElf"]            = 1.10,
-								 ["Nightborne"]         = 1.20,
-								 ["LightforgedDraenei"] = 1.50,
-								 ["HighmountainTauren"] = 1.75,
-								 ["DarkIronDwarf"]      = 1.00,
-								 ["MagharOrc"]          = 1.20,
-								 ["KulTiran"]           = 1.35,
-								 ["ZandalariTroll"]     = 1.45,
-								 ["Mechagnome"]         = 0.85,
-								 ["Vulpera"]            = 0.95,
-								 ["Dracthyr"]		    = 2.30,
-								 ["EarthenDwarf"]       = 1.00}
+TransmogOutfits.MaleTranslate = {["Human"]              = {-0.05, -2.3 ,  1.5 },
+								 ["Orc"]                = { 0.05, -3.6 ,  1.5 },
+								 ["Dwarf"]              = {-0.07, -2.5 ,  1.1 },
+								 ["Scourge"]            = {-0.15, -2.2 ,  1.4 },
+								 ["NightElf"]           = {-0.15, -2.8 ,  1.9 },
+								 ["Tauren"]             = {-0.12, -4.1 ,  1.9 },
+								 ["Gnome"]              = { 0   , -1.5 ,  0.7 },
+								 ["Troll"]              = { 0.17, -2.7 ,  1.7 },
+								 ["Draenei"]            = {-0.2 , -3.5 ,  1.8 },
+								 ["BloodElf"]           = {-0.05, -2.1 ,  1.6 },
+								 ["Worgen"]             = { 0.05, -3.5 ,  1.7 },
+								 ["Goblin"]             = { 0   , -1.8 ,  0.8 },
+								 ["Pandaren"]           = {-0.35, -3.8 ,  1.6 },
+								 ["VoidElf"]            = {-0.05, -2.1 ,  1.6 },
+								 ["Nightborne"]         = { 0   , -2.8 ,  1.9 },
+								 ["LightforgedDraenei"] = {-0.2,  -3.5 ,  1.8 },
+								 ["HighmountainTauren"] = {-0.12, -4.1 ,  1.9 },
+								 ["DarkIronDwarf"]      = {-0.12, -2.5 ,  1.1 },
+								 ["MagharOrc"]          = { 0.05, -3.6 ,  1.5 },
+								 ["KulTiran"]           = { 0   , -2.8 ,  2   },
+								 ["ZandalariTroll"]     = {-0.05, -2.95,  2.15},
+								 ["Mechagnome"]         = {-0.07, -1.6 ,  0.7 },
+								 ["Vulpera"]            = {-0.22, -2.1 ,  0.8 },
+								 ["Dracthyr"]		    = {-0.97, -3.3 ,  2.2 },
+								 ["EarthenDwarf"]       = {-0.07, -2.5 ,  1.1 },
+								 ["Harronir"]           = {-0.15, -1.9 ,  1.95}}
 							  
-TransmogOutfits.FemaleTranslate = {["Human"]              = 1.00,
-								   ["Orc"]                = 1.20,
-								   ["Dwarf"]              = 0.85,
-								   ["Scourge"]            = 0.85,
-								   ["NightElf"]           = 1.20,
-								   ["Tauren"]             = 1.75,
-								   ["Gnome"]              = 0.85,
-								   ["Troll"]              = 1.30,
-								   ["Draenei"]            = 1.35,
-								   ["BloodElf"]           = 1.05,
-								   ["Worgen"]             = 1.25,
-								   ["Goblin"]             = 0.95,
-								   ["Pandaren"]           = 1.50,
-								   ["VoidElf"]            = 1.05,
-								   ["Nightborne"]         = 1.10,
-								   ["LightforgedDraenei"] = 1.35,
-								   ["HighmountainTauren"] = 1.75,
-								   ["DarkIronDwarf"]      = 0.85,
-								   ["MagharOrc"]          = 1.20,
-								   ["KulTiran"]           = 1.30,
-								   ["ZandalariTroll"]     = 1.65,
-								   ["Mechagnome"]         = 0.85,
-								   ["Vulpera"]            = 1.05,
-								   ["Dracthyr"]			  = 2.30,
-								   ["EarthenDwarf"]       = 1.00}
+TransmogOutfits.FemaleTranslate = {["Human"]              = {-0.05, -1.8 ,  1.5 },
+								   ["Orc"]                = {-0.2 , -2.2 ,  1.55},
+								   ["Dwarf"]              = {-0.1 , -2   ,  1.07},
+								   ["Scourge"]            = { 0.07, -1.8 ,  1.45},
+								   ["NightElf"]           = {-0.05, -2.05,  1.85},
+								   ["Tauren"]             = {-0.35, -3.3 ,  1.9 },
+								   ["Gnome"]              = {-0.22, -1.7 ,  0.65},
+								   ["Troll"]              = {-0.12, -2.1 ,  1.9 },
+								   ["Draenei"]            = {-0.15, -1.55,  1.9 },
+								   ["BloodElf"]           = {-0.05, -1.8 ,  1.5 },
+								   ["Worgen"]             = {-0.1 , -2.7 ,  1.8 },
+								   ["Goblin"]             = {-0.22, -2   ,  0.87},
+								   ["Pandaren"]           = {-0.3 , -3.2 ,  1.6 },
+								   ["VoidElf"]            = {-0.05, -1.8 ,  1.5 },
+								   ["Nightborne"]         = { 0  ,  -2.05,  1.85},
+								   ["LightforgedDraenei"] = {-0.15, -1.8 ,  1.9 },
+								   ["HighmountainTauren"] = {-0.35, -3.3 ,  1.9 },
+								   ["DarkIronDwarf"]      = {-0.07, -2   ,  1.07},
+								   ["MagharOrc"]          = {-0.2 , -2.2 ,  1.55},
+								   ["KulTiran"]           = {-0.07, -2.1 ,  2   },
+								   ["ZandalariTroll"]     = {-0.25, -2.4 ,  2.3 },
+								   ["Mechagnome"]         = {-0.17, -1.6 ,  0.65},
+								   ["Vulpera"]            = {-0.22, -2.1 ,  0.85},
+								   ["Dracthyr"]			  = {-0.97, -3.3 ,  2.2 },
+								   ["EarthenDwarf"]       = {-0.1 , -2   ,  1.07},
+								   ["Harronir"]           = {-0.05, -1.7 ,  1.8 }}
 
 function TransmogOutfits:FrameOnEvent(event, arg1)
-	if event == "TRANSMOGRIFY_UPDATE" and WardrobeTransmogFrame ~= nil and WardrobeTransmogFrame:IsVisible() then
-		TransmogOutfits:FrameCreate(self)
-		self:UnregisterEvent("TRANSMOGRIFY_UPDATE")
+	if event == "ADDON_LOADED" then
+		if arg1 == "Blizzard_Transmog" then
+			TransmogOutfits:FrameCreate()
+			self:UnregisterEvent("ADDON_LOADED")
+		end
 	elseif event == "TRANSMOGRIFY_CLOSE" then
-		if TransmogOutfits.NewFrame ~= nil then
-			TransmogOutfits.NewFrame:Hide()
-		end
-		if TransmogOutfits.SelectFrame ~= nil then
-			TransmogOutfits.SelectFrame:Hide()
-		end
-		if TransmogOutfits.RemoveFrame ~= nil then
-			TransmogOutfits.RemoveFrame:Hide()
-		end
-		self:Hide()
-		TransmogOutfits.Select = false
-		TransmogOutfits.Sets = false
-		WardrobeCollectionFrame.FilterButton:Show()
-		WardrobeCollectionFrame:SetTab(1)
-		self:RegisterEvent("TRANSMOGRIFY_UPDATE")
-		collectgarbage("collect")
+		TransmogOutfits:HideSelectFrame()
+		TransmogOutfits.NewFrame:Hide()
+		self:RegisterEvent("TRANSMOGRIFY_OPEN")
 	end
 end
 
@@ -102,28 +90,13 @@ function TransmogOutfits:ContextMenuClick(value)
 end
 
 function TransmogOutfits:ShowSelectFrame()
-	self.Sets = WardrobeCollectionFrame.SetsTransmogFrame:IsVisible()
-	WardrobeCollectionFrame.ItemsCollectionFrame:Hide()
-	WardrobeCollectionFrame.SetsTransmogFrame:Hide()
-	WardrobeCollectionFrame.FilterButton:Hide()
-	self.WardrobeTab = WardrobeCollectionFrame.selectedTransmogTab
-	WardrobeCollectionFrame:SetTab(0)
-	WardrobeCollectionFrameSearchBox:Hide()
-	local scale = WardrobeTransmogFrame.ModelScene:GetPlayerActor():GetScale()
+	TransmogFrame.WardrobeCollection.TabContent:Hide()
+	TransmogFrame.WardrobeCollection.TabHeaders:Hide()
+	TransmogOutfits.SelectButton:SetText("Close")
 	local _, race = UnitRace("player")
 	local sex = UnitSex("player")
 	local _, alteredForm = C_PlayerInfo.GetAlternateFormInfo()
-	local zoom = 0
-	if race == "Dracthyr" and not alteredForm then
-		zoom = 1
-	end
-	if self.InitCamera then
-		for i = 1, 8 do
-			self.Models[i]:SetCameraPosition(WardrobeTransmogFrame.ModelScene:GetCameraPosition())
-		end
-		self.InitCamera = false
-	end
-	for i = 1, 8 do
+	for i = 1, 9 do
 		self.Models[i].actor:SetModelByUnit("player", false, true, false, not alteredForm)
 		self.Models[i]:SetPaused(true)
 		local file = self.Models[i].actor:GetModelFileID()
@@ -132,11 +105,12 @@ function TransmogOutfits:ShowSelectFrame()
 		elseif file == 4395382 then
 			race = "BloodElf"
 		end
-		self.Models[i].actor:SetScale(scale)
-		if sex == 2 then
-			self.Models[i].actor:SetPosition(self.MaleTranslate[race], zoom, 0)
+		if file == 1968587 then
+			self.Models[i]:SetCameraPosition(-0.2, -3.6, 1.5)
+		elseif sex == 2 then
+			self.Models[i]:SetCameraPosition(self.MaleTranslate[race][1], self.MaleTranslate[race][2], self.MaleTranslate[race][3])
 		elseif sex == 3 then
-			self.Models[i].actor:SetPosition(self.FemaleTranslate[race], zoom, 0)
+			self.Models[i]:SetCameraPosition(self.FemaleTranslate[race][1], self.FemaleTranslate[race][2], self.FemaleTranslate[race][3])
 		end
 	end
 	self.SelectFrame:Show()
@@ -144,20 +118,16 @@ function TransmogOutfits:ShowSelectFrame()
 end
 
 function TransmogOutfits:HideSelectFrame()
-	if self.Sets then
-		WardrobeCollectionFrame.SetsTransmogFrame:Show()
-	else
-		WardrobeCollectionFrame.ItemsCollectionFrame:Show()
-	end
-	WardrobeCollectionFrame.FilterButton:Show()
-	WardrobeCollectionFrame:SetTab(self.WardrobeTab)
-	WardrobeCollectionFrameSearchBox:Show()
 	self.SelectFrame:Hide()
 	self.Select = false
+	TransmogFrame.WardrobeCollection.TabContent:Show()
+	TransmogFrame.WardrobeCollection.TabHeaders:Show()
+	TransmogOutfits.SelectButton:SetText("Addon Outfits")
 end
 
 function TransmogOutfits:ButtonOnClick()
 	if self == TransmogOutfits.NewButton then
+		TransmogOutfits.NewNameBox:SetText("")
 		TransmogOutfits.NewFrame:Show()
 	elseif self == TransmogOutfits.SelectButton then
 		if TransmogOutfits.Select then
@@ -169,11 +139,9 @@ function TransmogOutfits:ButtonOnClick()
 		TransmogOutfits:UpdateOutfit()
 	elseif self == TransmogOutfits.RandomButton then
 		TransmogOutfits:RandomOutfit()
-	elseif self == TransmogOutfits.DoneButton then
-		TransmogOutfits:HideSelectFrame()
 	elseif self == TransmogOutfits.NewDoneButton then
 		TransmogOutfits:NewOutfit()
-	elseif self == TransmogOutfits.CancelButton then
+	elseif self == TransmogOutfits.NewCancelButton then
 		TransmogOutfits.NewFrame:Hide()
 	elseif self == TransmogOutfits.SelectSearchButton then
 		TransmogOutfits:SearchOutfit()
@@ -194,16 +162,6 @@ function TransmogOutfits:ButtonOnClick()
 	end
 end
 
-function TransmogOutfits:FindBlizzardOutfit(name)
-	local blizzardOutfits = C_TransmogCollection.GetOutfits()
-	for i = 1, table.getn(blizzardOutfits) do
-		if C_TransmogCollection.GetOutfitInfo(blizzardOutfits[i]) == name then
-			return i
-		end
-	end
-	return nil
-end
-
 function TransmogOutfits:FindName(name)
 	for i = 1, table.getn(transmogOutfitOutfits) do
 		if transmogOutfitOutfits[i]["name"] == name then
@@ -215,38 +173,27 @@ end
 
 function TransmogOutfits:UpdateOutfit()
 	local name = self.NameText:GetText()
-	local blizzardOutfits = C_TransmogCollection.GetOutfits()
-	local index = self:FindBlizzardOutfit(name)
+	local index = self:FindName(name)
 	if index ~= nil then
-		local outfit = WardrobeTransmogFrame.ModelScene:GetPlayerActor():GetItemTransmogInfoList()
-		C_TransmogCollection.ModifyOutfit(blizzardOutfits[index], outfit)
-	else
-		index = self:FindName(name)
-		if index ~= nil then
-			local outfit = {}
-			outfit["name"] = name
-			outfit[1] = self:GetTransmog(TransmogUtil.GetTransmogLocation("HEADSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[3] = self:GetTransmog(TransmogUtil.GetTransmogLocation("SHOULDERSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			if WardrobeTransmogFrame.SecondaryShoulderButton:IsVisible() then
-				outfit[33] = self:GetTransmog(TransmogUtil.GetTransmogLocation("SHOULDERSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Secondary))
-			else
-				outfit[33] = outfit[3]
-			end
-			outfit[4] = self:GetTransmog(TransmogUtil.GetTransmogLocation("SHIRTSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[5] = self:GetTransmog(TransmogUtil.GetTransmogLocation("CHESTSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[6] = self:GetTransmog(TransmogUtil.GetTransmogLocation("WAISTSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[7] = self:GetTransmog(TransmogUtil.GetTransmogLocation("LEGSSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[8] = self:GetTransmog(TransmogUtil.GetTransmogLocation("FEETSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[9] = self:GetTransmog(TransmogUtil.GetTransmogLocation("WRISTSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[10] = self:GetTransmog(TransmogUtil.GetTransmogLocation("HANDSSLOT" ,Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[15] = self:GetTransmog(TransmogUtil.GetTransmogLocation("BACKSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[16] = self:GetTransmog(TransmogUtil.GetTransmogLocation("MAINHANDSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[17] = self:GetTransmog(TransmogUtil.GetTransmogLocation("SECONDARYHANDSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[19] = self:GetTransmog(TransmogUtil.GetTransmogLocation("TABARDSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit["enchant1"] = self:GetTransmog(TransmogUtil.GetTransmogLocation("MAINHANDSLOT", Enum.TransmogType.Illusion, Enum.TransmogModification.Main))
-			outfit["enchant2"] = self:GetTransmog(TransmogUtil.GetTransmogLocation("SECONDARYHANDSLOT", Enum.TransmogType.Illusion, Enum.TransmogModification.Main))
-			transmogOutfitOutfits[index] = outfit
-		end
+		local outfit = {}
+		outfit["name"] = name
+		outfit[1] = self:GetTransmog(Enum.TransmogOutfitSlot.Head, Enum.TransmogType.Appearance)
+		outfit[3] = self:GetTransmog(Enum.TransmogOutfitSlot.ShoulderRight, Enum.TransmogType.Appearance)
+		outfit[33] = self:GetTransmog(Enum.TransmogOutfitSlot.ShoulderLeft, Enum.TransmogType.Appearance)
+		outfit[4] = self:GetTransmog(Enum.TransmogOutfitSlot.Body, Enum.TransmogType.Appearance)
+		outfit[5] = self:GetTransmog(Enum.TransmogOutfitSlot.Chest, Enum.TransmogType.Appearance)
+		outfit[6] = self:GetTransmog(Enum.TransmogOutfitSlot.Waist, Enum.TransmogType.Appearance)
+		outfit[7] = self:GetTransmog(Enum.TransmogOutfitSlot.Legs, Enum.TransmogType.Appearance)
+		outfit[8] = self:GetTransmog(Enum.TransmogOutfitSlot.Feet, Enum.TransmogType.Appearance)
+		outfit[9] = self:GetTransmog(Enum.TransmogOutfitSlot.Wrist, Enum.TransmogType.Appearance)
+		outfit[10] = self:GetTransmog(Enum.TransmogOutfitSlot.Hand ,Enum.TransmogType.Appearance)
+		outfit[15] = self:GetTransmog(Enum.TransmogOutfitSlot.Back, Enum.TransmogType.Appearance)
+		outfit[16] = self:GetTransmog(Enum.TransmogOutfitSlot.WeaponMainHand, Enum.TransmogType.Appearance)
+		outfit[17] = self:GetTransmog(Enum.TransmogOutfitSlot.WeaponOffHand, Enum.TransmogType.Appearance)
+		outfit[19] = self:GetTransmog(Enum.TransmogOutfitSlot.Tabard, Enum.TransmogType.Appearance)
+		outfit["enchant1"] = self:GetTransmog(Enum.TransmogOutfitSlot.WeaponMainHand, Enum.TransmogType.Illusion)
+		outfit["enchant2"] = self:GetTransmog(Enum.TransmogOutfitSlot.WeaponOffHand, Enum.TransmogType.Illusion)
+		transmogOutfitOutfits[index] = outfit
 	end
 	if self.SelectFrame:IsVisible() then
 		self.SelectFrame:Hide()
@@ -257,92 +204,53 @@ end
 function TransmogOutfits:NewOutfit()
 	local name = self.NewNameBox:GetText()
 	local number = table.getn(transmogOutfitOutfits)
-	local current = table.getn(C_TransmogCollection.GetOutfits())
-	local max = C_TransmogCollection.GetNumMaxOutfits()
 	self.NewNameBox:SetText("")
-	if transmogOutfitBlizzard and current < max then
-		local icon
-		local outfit = WardrobeTransmogFrame.ModelScene:GetPlayerActor():GetItemTransmogInfoList()
-		for slotID, itemTransmogInfo in ipairs(outfit) do
-			local appearanceID = itemTransmogInfo.appearanceID
-			if appearanceID ~= Constants.Transmog.NoTransmogID then
-				icon = select(4, C_TransmogCollection.GetAppearanceSourceInfo(appearanceID))
-				if icon then
-					break
-				end
-			end
-		end
-		C_TransmogCollection.NewOutfit(name, icon, outfit)
-	else
-		if name ~= "" and self:FindName(name) == nil then
-			local outfit = {}
-			self.NameText:SetText(name)
-			outfit["name"] = name
-			outfit[1] = self:GetTransmog(TransmogUtil.GetTransmogLocation("HEADSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[3] = self:GetTransmog(TransmogUtil.GetTransmogLocation("SHOULDERSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			if WardrobeTransmogFrame.SecondaryShoulderButton:IsVisible() then
-				outfit[33] = self:GetTransmog(TransmogUtil.GetTransmogLocation("SHOULDERSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Secondary))
-			else
-				outfit[33] = outfit[3]
-			end
-			outfit[4] = self:GetTransmog(TransmogUtil.GetTransmogLocation("SHIRTSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[5] = self:GetTransmog(TransmogUtil.GetTransmogLocation("CHESTSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[6] = self:GetTransmog(TransmogUtil.GetTransmogLocation("WAISTSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[7] = self:GetTransmog(TransmogUtil.GetTransmogLocation("LEGSSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[8] = self:GetTransmog(TransmogUtil.GetTransmogLocation("FEETSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[9] = self:GetTransmog(TransmogUtil.GetTransmogLocation("WRISTSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[10] = self:GetTransmog(TransmogUtil.GetTransmogLocation("HANDSSLOT" ,Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[15] = self:GetTransmog(TransmogUtil.GetTransmogLocation("BACKSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[16] = self:GetTransmog(TransmogUtil.GetTransmogLocation("MAINHANDSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[17] = self:GetTransmog(TransmogUtil.GetTransmogLocation("SECONDARYHANDSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit[19] = self:GetTransmog(TransmogUtil.GetTransmogLocation("TABARDSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main))
-			outfit["enchant1"] = self:GetTransmog(TransmogUtil.GetTransmogLocation("MAINHANDSLOT", Enum.TransmogType.Illusion, Enum.TransmogModification.Main))
-			outfit["enchant2"] = self:GetTransmog(TransmogUtil.GetTransmogLocation("SECONDARYHANDSLOT", Enum.TransmogType.Illusion, Enum.TransmogModification.Main))
-			transmogOutfitOutfits[number + 1] = outfit
-		end
+	if name ~= "" and self:FindName(name) == nil then
+		local outfit = {}
+		self.NameText:SetText(name)
+		outfit["name"] = name
+		outfit[1] = self:GetTransmog(Enum.TransmogOutfitSlot.Head, Enum.TransmogType.Appearance)
+		outfit[3] = self:GetTransmog(Enum.TransmogOutfitSlot.ShoulderRight, Enum.TransmogType.Appearance)
+		outfit[33] = self:GetTransmog(Enum.TransmogOutfitSlot.ShoulderLeft, Enum.TransmogType.Appearance)
+		outfit[4] = self:GetTransmog(Enum.TransmogOutfitSlot.Body, Enum.TransmogType.Appearance)
+		outfit[5] = self:GetTransmog(Enum.TransmogOutfitSlot.Chest, Enum.TransmogType.Appearance)
+		outfit[6] = self:GetTransmog(Enum.TransmogOutfitSlot.Waist, Enum.TransmogType.Appearance)
+		outfit[7] = self:GetTransmog(Enum.TransmogOutfitSlot.Legs, Enum.TransmogType.Appearance)
+		outfit[8] = self:GetTransmog(Enum.TransmogOutfitSlot.Feet, Enum.TransmogType.Appearance)
+		outfit[9] = self:GetTransmog(Enum.TransmogOutfitSlot.Wrist, Enum.TransmogType.Appearance)
+		outfit[10] = self:GetTransmog(Enum.TransmogOutfitSlot.Hand ,Enum.TransmogType.Appearance)
+		outfit[15] = self:GetTransmog(Enum.TransmogOutfitSlot.Back, Enum.TransmogType.Appearance)
+		outfit[16] = self:GetTransmog(Enum.TransmogOutfitSlot.WeaponMainHand, Enum.TransmogType.Appearance)
+		outfit[17] = self:GetTransmog(Enum.TransmogOutfitSlot.WeaponOffHand, Enum.TransmogType.Appearance)
+		outfit[19] = self:GetTransmog(Enum.TransmogOutfitSlot.Tabard, Enum.TransmogType.Appearance)
+		outfit["enchant1"] = self:GetTransmog(Enum.TransmogOutfitSlot.WeaponMainHand, Enum.TransmogType.Illusion)
+		outfit["enchant2"] = self:GetTransmog(Enum.TransmogOutfitSlot.WeaponOffHand, Enum.TransmogType.Illusion)
+		transmogOutfitOutfits[number + 1] = outfit
 	end
 	self.NewFrame:Hide()
 	self:SearchOutfit()
 end
 
 function TransmogOutfits:RandomOutfit()
-	local blizzardOutfits = C_TransmogCollection.GetOutfits()
-	local number = table.getn(blizzardOutfits) + table.getn(transmogOutfitOutfits)
+	local number = table.getn(transmogOutfitOutfits)
 	local rand = math.random(1, number)
 	self:ApplyOutfit(rand)
 end
 
 function TransmogOutfits:SearchOutfit()
-	local blizzardOutfits = C_TransmogCollection.GetOutfits()
 	self.FoundOutfits = {}
 	if self.SelectSearchBox:GetText() == "" then
-		for i = 1, table.getn(blizzardOutfits) do
+		for i = 1, table.getn(transmogOutfitOutfits) do
 			self.FoundOutfits[i] = {}
 			self.FoundOutfits[i].index = i
-			self.FoundOutfits[i].name = C_TransmogCollection.GetOutfitInfo(blizzardOutfits[i])
-		end
-		self.FoundBlizzardOutfits = table.getn(self.FoundOutfits)
-		for i = 1, table.getn(transmogOutfitOutfits) do
-			self.FoundOutfits[i + self.FoundBlizzardOutfits] = {}
-			self.FoundOutfits[i + self.FoundBlizzardOutfits].index = i + self.FoundBlizzardOutfits
-			self.FoundOutfits[i + self.FoundBlizzardOutfits].name = transmogOutfitOutfits[i]["name"]
+			self.FoundOutfits[i].name = transmogOutfitOutfits[i]["name"]
 		end
 	else
-		local j = 1, name
-		for i = 1, table.getn(blizzardOutfits) do
-			name = C_TransmogCollection.GetOutfitInfo(blizzardOutfits[i])
-			if string.find(name, self.SelectSearchBox:GetText()) then
+		local j = 1
+		for i = 1, table.getn(transmogOutfitOutfits) do
+			if string.find(string.lower(transmogOutfitOutfits[i]["name"]), string.lower(self.SelectSearchBox:GetText())) then
 				self.FoundOutfits[j] = {}
 				self.FoundOutfits[j].index = i
-				self.FoundOutfits[j].name = name
-				j = j + 1
-			end
-		end
-		self.FoundBlizzardOutfits = table.getn(self.FoundOutfits)
-		for i = 1, table.getn(transmogOutfitOutfits) do
-			if string.find(transmogOutfitOutfits[i]["name"], self.SelectSearchBox:GetText()) then
-				self.FoundOutfits[j] = {}
-				self.FoundOutfits[j].index = i + self.FoundBlizzardOutfits
 				self.FoundOutfits[j].name = transmogOutfitOutfits[i]["name"]
 				j = j + 1
 			end
@@ -370,51 +278,36 @@ function TransmogOutfits:SortOutfits()
 end
 
 function TransmogOutfits:ApplyOutfit(index)
-	local blizzardOutfits = C_TransmogCollection.GetOutfits()
-	if blizzardOutfits[index] ~= nil then
-		self.NameText:SetText(C_TransmogCollection.GetOutfitInfo(blizzardOutfits[index]))
-		C_Transmog.LoadOutfit(blizzardOutfits[index])
-	else
-		local outfit = transmogOutfitOutfits[index - self.FoundBlizzardOutfits]
-		if outfit ~= nil then
-			self.NameText:SetText(outfit["name"])
-			self:SetTransmog(TransmogUtil.GetTransmogLocation("HEADSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main), outfit[1])
-			self:SetTransmog(TransmogUtil.GetTransmogLocation("SHOULDERSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main), outfit[3])
-			self:SetTransmog(TransmogUtil.GetTransmogLocation("SHOULDERSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Secondary), outfit[33])
-			self:SetTransmog(TransmogUtil.GetTransmogLocation("SHIRTSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main), outfit[4])
-			self:SetTransmog(TransmogUtil.GetTransmogLocation("CHESTSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main), outfit[5])
-			self:SetTransmog(TransmogUtil.GetTransmogLocation("WAISTSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main), outfit[6])
-			self:SetTransmog(TransmogUtil.GetTransmogLocation("LEGSSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main), outfit[7])
-			self:SetTransmog(TransmogUtil.GetTransmogLocation("FEETSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main), outfit[8])
-			self:SetTransmog(TransmogUtil.GetTransmogLocation("WRISTSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main), outfit[9])
-			self:SetTransmog(TransmogUtil.GetTransmogLocation("HANDSSLOT" ,Enum.TransmogType.Appearance, Enum.TransmogModification.Main), outfit[10])
-			self:SetTransmog(TransmogUtil.GetTransmogLocation("BACKSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main), outfit[15])
-			self:SetTransmog(TransmogUtil.GetTransmogLocation("MAINHANDSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main), outfit[16])
-			self:SetTransmog(TransmogUtil.GetTransmogLocation("SECONDARYHANDSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main), outfit[17])
-			self:SetTransmog(TransmogUtil.GetTransmogLocation("TABARDSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main), outfit[19])
-			self:SetTransmog(TransmogUtil.GetTransmogLocation("MAINHANDSLOT", Enum.TransmogType.Illusion, Enum.TransmogModification.Main), outfit["enchant1"])
-			self:SetTransmog(TransmogUtil.GetTransmogLocation("SECONDARYHANDSLOT", Enum.TransmogType.Illusion, Enum.TransmogModification.Main), outfit["enchant2"])
-		end
+	local outfit = transmogOutfitOutfits[index]
+	if outfit ~= nil then
+		C_TransmogOutfitInfo.ClearAllPendingTransmogs()
+		self.NameText:SetText(outfit["name"])
+		self:SetTransmog(Enum.TransmogOutfitSlot.Head, Enum.TransmogType.Appearance, outfit[1])
+		self:SetTransmog(Enum.TransmogOutfitSlot.ShoulderRight, Enum.TransmogType.Appearance, outfit[3])
+		self:SetTransmog(Enum.TransmogOutfitSlot.ShoulderLeft, Enum.TransmogType.Appearance, outfit[33])
+		self:SetTransmog(Enum.TransmogOutfitSlot.Body, Enum.TransmogType.Appearance, outfit[4])
+		self:SetTransmog(Enum.TransmogOutfitSlot.Chest, Enum.TransmogType.Appearance, outfit[5])
+		self:SetTransmog(Enum.TransmogOutfitSlot.Waist, Enum.TransmogType.Appearance, outfit[6])
+		self:SetTransmog(Enum.TransmogOutfitSlot.Legs, Enum.TransmogType.Appearance, outfit[7])
+		self:SetTransmog(Enum.TransmogOutfitSlot.Feet, Enum.TransmogType.Appearance, outfit[8])
+		self:SetTransmog(Enum.TransmogOutfitSlot.Wrist, Enum.TransmogType.Appearance, outfit[9])
+		self:SetTransmog(Enum.TransmogOutfitSlot.Hand ,Enum.TransmogType.Appearance, outfit[10])
+		self:SetTransmog(Enum.TransmogOutfitSlot.Back, Enum.TransmogType.Appearance, outfit[15])
+		self:SetTransmog(Enum.TransmogOutfitSlot.WeaponMainHand, Enum.TransmogType.Appearance, outfit[16])
+		self:SetTransmog(Enum.TransmogOutfitSlot.WeaponOffHand, Enum.TransmogType.Appearance, outfit[17])
+		self:SetTransmog(Enum.TransmogOutfitSlot.Tabard, Enum.TransmogType.Appearance, outfit[19])
+		self:SetTransmog(Enum.TransmogOutfitSlot.WeaponMainHand, Enum.TransmogType.Illusion, outfit["enchant1"])
+		self:SetTransmog(Enum.TransmogOutfitSlot.WeaponOffHand, Enum.TransmogType.Illusion, outfit["enchant2"])
 	end
 end
 
 function TransmogOutfits:RenameDone()
 	if self.RenameNameBox:GetText() ~= "" then
-		local blizzardOutfits = C_TransmogCollection.GetOutfits()
-		if self.CurrentOutfit > self.FoundBlizzardOutfits then
-			if self.NameText:GetText() == transmogOutfitOutfits[self.CurrentOutfit - self.FoundBlizzardOutfits]["name"] then
-				transmogOutfitOutfits[self.CurrentOutfit - self.FoundBlizzardOutfits]["name"] = self.RenameNameBox:GetText()
-				self.NameText:SetText(self.RenameNameBox:GetText())
-			else
-				transmogOutfitOutfits[self.CurrentOutfit - self.FoundBlizzardOutfits]["name"] = self.RenameNameBox:GetText()
-			end
+		if self.NameText:GetText() == transmogOutfitOutfits[self.CurrentOutfit]["name"] then
+			transmogOutfitOutfits[self.CurrentOutfit]["name"] = self.RenameNameBox:GetText()
+			self.NameText:SetText(self.RenameNameBox:GetText())
 		else
-			if self.NameText:GetText() == C_TransmogCollection.GetOutfitInfo(blizzardOutfits[self.CurrentOutfit]) then
-				C_TransmogCollection.RenameOutfit(blizzardOutfits[self.CurrentOutfit], self.RenameNameBox:GetText())
-				self.NameText:SetText(self.RenameNameBox:GetText())
-			else
-				C_TransmogCollection.RenameOutfit(blizzardOutfits[self.CurrentOutfit], self.RenameNameBox:GetText())
-			end
+			transmogOutfitOutfits[self.CurrentOutfit]["name"] = self.RenameNameBox:GetText()
 		end
 		TransmogOutfits:SearchOutfit()
 		self.RenameFrame:Hide()
@@ -422,61 +315,137 @@ function TransmogOutfits:RenameDone()
 end
 
 function TransmogOutfits:RemoveOutfit()
-	local blizzardOutfits = C_TransmogCollection.GetOutfits()
 	local name
-	if self.CurrentOutfit > self.FoundBlizzardOutfits then
-		name = transmogOutfitOutfits[self.CurrentOutfit - self.FoundBlizzardOutfits]["name"]
-	else 
-		name = C_TransmogCollection.GetOutfitInfo(blizzardOutfits[self.CurrentOutfit])
-	end
+	name = transmogOutfitOutfits[self.CurrentOutfit]["name"]
 	self.RemoveFrame:Show()
 	self.RemoveText:SetText("\n\nDo you really want to remove outfit\nnamed " .. name .. "?")
 end
 
 function TransmogOutfits:RemoveYes()
-	local blizzardOutfits = C_TransmogCollection.GetOutfits()
-	if self.CurrentOutfit > self.FoundBlizzardOutfits then
-		if self.NameText:GetText() == transmogOutfitOutfits[self.CurrentOutfit - self.FoundBlizzardOutfits]["name"] then
-			self.NameText:SetText("No Outfit")
-		end
-	elseif self.NameText:GetText() == C_TransmogCollection.GetOutfitInfo(blizzardOutfits[self.CurrentOutfit]) then
+	if self.NameText:GetText() == transmogOutfitOutfits[self.CurrentOutfit]["name"] then
 		self.NameText:SetText("No Outfit")
 	end
-	if blizzardOutfits[self.CurrentOutfit] ~= nil then
-		C_TransmogCollection.DeleteOutfit(blizzardOutfits[self.CurrentOutfit])
-	else
-		table.remove(transmogOutfitOutfits, self.CurrentOutfit - self.FoundBlizzardOutfits)
-	end
+	table.remove(transmogOutfitOutfits, self.CurrentOutfit)
 	self:SearchOutfit()
 	self.RemoveFrame:Hide()
 end
 
-function TransmogOutfits:GetTransmog(slot)
-	local transmog
-	local baseSourceID, _, appliedSourceID, _, pendingSourceID, _, hasPendingUndo = C_Transmog.GetSlotVisualInfo(slot)
-	if hasPendingUndo then
-		transmog = baseSourceID
-	elseif pendingSourceID ~= 0 then
-		transmog = pendingSourceID
-	elseif appliedSourceID ~= 0 then
-		transmog = appliedSourceID
-	else
-		transmog = baseSourceID
+function TransmogOutfits:GetTransmog(slot, type)
+	local option = 0
+	if slot == Enum.TransmogOutfitSlot.WeaponMainHand then
+		option = TransmogFrame.CharacterPreview:GetSlotFrame(slot, type).slotData.currentWeaponOptionInfo.weaponOption
+	elseif slot == Enum.TransmogOutfitSlot.WeaponOffHand then
+		option = TransmogFrame.CharacterPreview:GetSlotFrame(Enum.TransmogOutfitSlot.WeaponMainHand, type).slotData.currentWeaponOptionInfo.weaponOption
+		if option ~= 2 and option ~= 3 then
+			option = TransmogFrame.CharacterPreview:GetSlotFrame(slot, type).slotData.currentWeaponOptionInfo.weaponOption
+		end
 	end
-	return transmog
+	local slotinfo = C_TransmogOutfitInfo.GetViewedOutfitSlotInfo(slot, type, option)
+	return slotinfo.transmogID
 end
 
-function TransmogOutfits:SetTransmog(slot, transmog)
-	C_Transmog.ClearPending(slot)
-	local _, _, _, canTransmogrify = C_Transmog.GetSlotInfo(slot)
-	if canTransmogrify and transmog ~= nil and transmog ~= 0 then
-		C_Transmog.SetPending(slot, TransmogUtil.CreateTransmogPendingInfo(Enum.TransmogPendingType.Apply, transmog))
+function WeaponOption(categoryID)
+	local spec = GetSpecializationInfo(GetSpecialization())
+	if categoryID == 12 then
+		return Enum.TransmogOutfitSlotOption.OneHandedWeapon
+	elseif categoryID == 13 then
+		return Enum.TransmogOutfitSlotOption.OneHandedWeapon
+	elseif categoryID == 14 then
+		return Enum.TransmogOutfitSlotOption.OneHandedWeapon
+	elseif categoryID == 15 then
+		return Enum.TransmogOutfitSlotOption.OneHandedWeapon
+	elseif categoryID == 16 then
+		return Enum.TransmogOutfitSlotOption.OneHandedWeapon
+	elseif categoryID == 17 then
+		return Enum.TransmogOutfitSlotOption.OneHandedWeapon
+	elseif categoryID == 28 then
+		return Enum.TransmogOutfitSlotOption.OneHandedWeapon
+	elseif categoryID == 20 then
+		if spec == 72 then
+			return Enum.TransmogOutfitSlotOption.FuryTwoHandedWeapon
+		end
+		return Enum.TransmogOutfitSlotOption.TwoHandedWeapon
+	elseif categoryID == 21 then
+		if spec == 72 then
+			return Enum.TransmogOutfitSlotOption.FuryTwoHandedWeapon
+		end
+		return Enum.TransmogOutfitSlotOption.TwoHandedWeapon
+	elseif categoryID == 22 then
+		if spec == 72 then
+			return Enum.TransmogOutfitSlotOption.FuryTwoHandedWeapon
+		end
+		return Enum.TransmogOutfitSlotOption.TwoHandedWeapon
+	elseif categoryID == 23 then
+		if spec == 72 then
+			return Enum.TransmogOutfitSlotOption.FuryTwoHandedWeapon
+		end
+		return Enum.TransmogOutfitSlotOption.TwoHandedWeapon
+	elseif categoryID == 24 then
+		if spec == 72 then
+			return Enum.TransmogOutfitSlotOption.FuryTwoHandedWeapon
+		end
+		return Enum.TransmogOutfitSlotOption.TwoHandedWeapon
+	elseif categoryID == 25 then
+		return Enum.TransmogOutfitSlotOption.RangedWeapon
+	elseif categoryID == 26 then
+		return Enum.TransmogOutfitSlotOption.RangedWeapon
+	elseif categoryID == 27 then
+		return Enum.TransmogOutfitSlotOption.RangedWeapon
+	elseif categoryID == 19 then
+		return Enum.TransmogOutfitSlotOption.OffHand
+	elseif categoryID == 18 then
+		return Enum.TransmogOutfitSlotOption.Shield
+	else
+		return 0
+	end
+end
+
+function TransmogOutfits:SetTransmog(slot, type, transmog)
+	local option = 0
+	local display = 1
+	local info = C_TransmogCollection.GetSourceInfo(transmog)
+	if info == nil then
+		return
+	end
+	if string.find(info.name, "^Hidden") then
+		display = 3
+	end
+	if slot == Enum.TransmogOutfitSlot.WeaponMainHand or slot == Enum.TransmogOutfitSlot.WeaponOffHand then
+		option = WeaponOption(info.categoryID)
+	end
+	C_TransmogOutfitInfo.SetPendingTransmog(slot, type, option, transmog, display)
+end
+
+function HookSlotScript(slot, type, index)
+	if TransmogOutfits.HookedSlots[index] == nil or TransmogOutfits.HookedSlots[index] == false then
+		frame = TransmogFrame.CharacterPreview:GetSlotFrame(slot, type)
+		if frame ~= nil then
+			frame:HookScript("OnClick", function() TransmogOutfits:WardrobeSlotOnClick() end)
+			TransmogOutfits.HookedSlots[index] = true
+		else
+			TransmogOutfits.HookedSlots[index] = false
+		end
 	end
 end
 
 function TransmogOutfits:SelectFrameOnShow()
-	local blizzardOutfits = C_TransmogCollection.GetOutfits()
-	TransmogOutfits.NumPages = math.ceil(table.getn(TransmogOutfits.FoundOutfits) / 8)
+	HookSlotScript(Enum.TransmogOutfitSlot.Head, Enum.TransmogType.Appearance, 1)
+	HookSlotScript(Enum.TransmogOutfitSlot.ShoulderRight, Enum.TransmogType.Appearance, 3)
+	HookSlotScript(Enum.TransmogOutfitSlot.ShoulderLeft, Enum.TransmogType.Appearance, 33)
+	HookSlotScript(Enum.TransmogOutfitSlot.Body, Enum.TransmogType.Appearance, 4)
+	HookSlotScript(Enum.TransmogOutfitSlot.Chest, Enum.TransmogType.Appearance, 5)
+	HookSlotScript(Enum.TransmogOutfitSlot.Waist, Enum.TransmogType.Appearance, 6)
+	HookSlotScript(Enum.TransmogOutfitSlot.Legs, Enum.TransmogType.Appearance, 7)
+	HookSlotScript(Enum.TransmogOutfitSlot.Feet, Enum.TransmogType.Appearance, 8)
+	HookSlotScript(Enum.TransmogOutfitSlot.Wrist, Enum.TransmogType.Appearance, 9)
+	HookSlotScript(Enum.TransmogOutfitSlot.Hand ,Enum.TransmogType.Appearance, 10)
+	HookSlotScript(Enum.TransmogOutfitSlot.Back, Enum.TransmogType.Appearance, 15)
+	HookSlotScript(Enum.TransmogOutfitSlot.WeaponMainHand, Enum.TransmogType.Appearance, 16)
+	HookSlotScript(Enum.TransmogOutfitSlot.WeaponOffHand, Enum.TransmogType.Appearance, 17)
+	HookSlotScript(Enum.TransmogOutfitSlot.Tabard, Enum.TransmogType.Appearance, 19)
+	HookSlotScript(Enum.TransmogOutfitSlot.WeaponMainHand, Enum.TransmogType.Illusion, 16)
+	HookSlotScript(Enum.TransmogOutfitSlot.WeaponOffHand, Enum.TransmogType.Illusion, 17)
+	TransmogOutfits.NumPages = math.ceil(table.getn(TransmogOutfits.FoundOutfits) / 9)
 	if TransmogOutfits.NumPages <= 0 then
 		TransmogOutfits.NumPages = 1
 	end
@@ -484,24 +453,11 @@ function TransmogOutfits:SelectFrameOnShow()
 		TransmogOutfits.Page = TransmogOutfits.NumPages
 	end
 	TransmogOutfits.PagesText:SetText("Page " .. TransmogOutfits.Page .. "/" .. TransmogOutfits.NumPages)
-	for i = 1, 8 do
+	for i = 1, 9 do
 		TransmogOutfits.Models[i]:Show()
-		local outfit = TransmogOutfits.FoundOutfits[i + 8 * (TransmogOutfits.Page - 1)]
-		if outfit ~= nil and outfit.index <= TransmogOutfits.FoundBlizzardOutfits and blizzardOutfits[outfit.index] ~= nil then
-			local sources  = C_TransmogCollection.GetOutfitItemTransmogInfoList(blizzardOutfits[TransmogOutfits.FoundOutfits[i + 8 * (TransmogOutfits.Page - 1)].index])
-			TransmogOutfits.Models[i].actor:Undress()
-			for slotID, itemTransmogInfo in ipairs(sources) do
-				local canRecurse = false
-				if slotID == 17 then
-					local transmogLocation = TransmogUtil.GetTransmogLocation("MAINHANDSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main)
-					local mainHandCategoryID = C_Transmog.GetSlotEffectiveCategory(transmogLocation)
-					canRecurse = TransmogUtil.IsCategoryLegionArtifact(mainHandCategoryID)
-				end
-				TransmogOutfits.Models[i].actor:SetItemTransmogInfo(itemTransmogInfo, slotID)
-			end
-			TransmogOutfits.ModelTexts[i]:SetText(outfit.name)
-		elseif outfit ~= nil and transmogOutfitOutfits[outfit.index - TransmogOutfits.FoundBlizzardOutfits] then
-			local sources = transmogOutfitOutfits[outfit.index - TransmogOutfits.FoundBlizzardOutfits]
+		local outfit = TransmogOutfits.FoundOutfits[i + 9 * (TransmogOutfits.Page - 1)]
+		if outfit ~= nil and transmogOutfitOutfits[outfit.index] then
+			local sources = transmogOutfitOutfits[outfit.index]
 			TransmogOutfits.Models[i].actor:Undress()
 			TransmogOutfits:SetTransmogInfo(TransmogOutfits.Models[i].actor, sources[1], nil, nil, 1)
 			TransmogOutfits:SetTransmogInfo(TransmogOutfits.Models[i].actor, sources[3], sources[33], nil, 3)
@@ -524,22 +480,11 @@ function TransmogOutfits:SelectFrameOnShow()
 end
 
 function TransmogOutfits:SetTransmogInfo(model, appearanceID, secondaryAppearanceID, illusionID, slotID)
-	if slotID == 3 then
-		local baseSourceID = C_Transmog.GetSlotVisualInfo(TransmogUtil.GetTransmogLocation("SHOULDERSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Secondary))
-		if secondaryAppearanceID == baseSourceID then
-			secondaryAppearanceID = nil
-		end
+	if appearanceID == nil then
+		return
 	end
 	local itemTransmogInfo = ItemUtil.CreateItemTransmogInfo(appearanceID, secondaryAppearanceID, illusionID)
-	local canRecurse = false
-	if slotID == 16 then
-		local mainHandCategoryID = C_Transmog.GetBaseCategory(appearanceID)
-		canRecurse = TransmogUtil.IsCategoryLegionArtifact(mainHandCategoryID)
-		if mainHandCategoryID and TransmogUtil.IsCategoryRangedWeapon(mainHandCategoryID) then
-			slotID = nil
-		end
-	end
-	model:SetItemTransmogInfo(itemTransmogInfo, slotID, canRecurse)
+	model:SetItemTransmogInfo(itemTransmogInfo, slotID)
 end
 
 function TransmogOutfits:PrevPage()
@@ -562,79 +507,51 @@ function TransmogOutfits:NextPage()
 	end
 end
 
-function TransmogOutfits:WardrobeTabOnClick()
-	TransmogOutfits:HideSelectFrame();
-	WardrobeCollectionFrame:ClickTab(self)
-end
-
 function TransmogOutfits:WardrobeSlotOnClick(button)
 	TransmogOutfits:HideSelectFrame();
-	self:OnClick(button)
 end
-	
-function TransmogOutfits:FrameCreate(frame)
-	WardrobeTransmogFrame.OutfitDropdown:Hide()
+
+function TransmogOutfits:FrameCreate()
 	self.FoundOutfits = {}
-	local blizzardOutfits = C_TransmogCollection.GetOutfits()
-	for i = 1, table.getn(blizzardOutfits) do
+	for i = 1, table.getn(transmogOutfitOutfits) do
 		self.FoundOutfits[i] = {}
 		self.FoundOutfits[i].index = i
-		self.FoundOutfits[i].name = C_TransmogCollection.GetOutfitInfo(blizzardOutfits[i])
+		self.FoundOutfits[i].name = transmogOutfitOutfits[i]["name"]
 	end
-	self.FoundBlizzardOutfits = table.getn(self.FoundOutfits)
-	for i = 1, table.getn(transmogOutfitOutfits) do
-		self.FoundOutfits[i + self.FoundBlizzardOutfits] = {}
-		self.FoundOutfits[i + self.FoundBlizzardOutfits].index = i + table.getn(blizzardOutfits)
-		self.FoundOutfits[i + self.FoundBlizzardOutfits].name = transmogOutfitOutfits[i]["name"]
-	end
-	frame:SetFrameStrata("TOOLTIP")
-	frame:SetWidth(WardrobeTransmogFrame:GetWidth()) 
-	frame:SetHeight(50)
-	frame:ClearAllPoints()
-	frame:SetPoint("BOTTOMRIGHT", WardrobeTransmogFrame, "TOPRIGHT", 0, 0)
-	frame:SetParent(WardrobeTransmogFrame)
-	frame:Show()
-	WardrobeCollectionFrameTab1:SetScript("OnClick", self.WardrobeTabOnClick)
-	WardrobeCollectionFrameTab2:SetScript("OnClick", self.WardrobeTabOnClick)
-	WardrobeTransmogFrame.HeadButton:SetScript("OnClick", self.WardrobeSlotOnClick)
-	WardrobeTransmogFrame.ShoulderButton:SetScript("OnClick", self.WardrobeSlotOnClick)
-	WardrobeTransmogFrame.SecondaryShoulderButton:SetScript("OnClick", self.WardrobeSlotOnClick)
-	WardrobeTransmogFrame.BackButton:SetScript("OnClick", self.WardrobeSlotOnClick)
-	WardrobeTransmogFrame.ChestButton:SetScript("OnClick", self.WardrobeSlotOnClick)
-	WardrobeTransmogFrame.ShirtButton:SetScript("OnClick", self.WardrobeSlotOnClick)
-	WardrobeTransmogFrame.TabardButton:SetScript("OnClick", self.WardrobeSlotOnClick)
-	WardrobeTransmogFrame.WristButton:SetScript("OnClick", self.WardrobeSlotOnClick)
-	WardrobeTransmogFrame.HandsButton:SetScript("OnClick", self.WardrobeSlotOnClick)
-	WardrobeTransmogFrame.WaistButton:SetScript("OnClick", self.WardrobeSlotOnClick)
-	WardrobeTransmogFrame.LegsButton:SetScript("OnClick", self.WardrobeSlotOnClick)
-	WardrobeTransmogFrame.FeetButton:SetScript("OnClick", self.WardrobeSlotOnClick)
-	WardrobeTransmogFrame.MainHandButton:SetScript("OnClick", self.WardrobeSlotOnClick)
-	WardrobeTransmogFrame.SecondaryHandButton:SetScript("OnClick", self.WardrobeSlotOnClick)
-	self:SetupNameFrame(self.NameFrame, self.NameText)
-	if self.SelectFrame == nil then
-		self.SelectFrame = CreateFrame("FRAME", nil, WardrobeCollectionFrame, "CollectionsBackgroundTemplate")
+	if self.SelectButton == nil then
+		self.SelectButton = CreateFrame("BUTTON", nil, TransmogFrame.WardrobeCollection, "UIPanelButtonTemplate")
+		self:SetupButton(self.SelectButton, "Addon Outfits", 120)
+		self.SelectButton:SetPoint("TOPRIGHT", TransmogFrame.WardrobeCollection, "TOPRIGHT", -10, -10)
+		self.SelectFrame = CreateFrame("FRAME", nil, TransmogFrame.WardrobeCollection, TransmogWardrobeCustomSetsMixin and "CollectionsBackgroundTemplate")
 		self.SelectFrame:SetScript("OnShow", self.SelectFrameOnShow)
+		self.SelectFrame:SetFrameStrata("HIGH")
+		self.NameFrame = CreateFrame("FRAME", nil, self.SelectFrame, BackdropTemplateMixin and "BackdropTemplate")
+		self.NameText = self.NameFrame:CreateFontString(nil, "OVERLAY", "GameFontWhite")
+		self.NameFrame:SetPoint("BOTTOMLEFT", self.SelectFrame, "TOPLEFT", 0, 30)
+		self.NewButton = CreateFrame("BUTTON", nil, self.SelectFrame, "UIPanelButtonTemplate")
+		self:SetupButton(self.NewButton, "Create New", 100)
+		self.NewButton:SetPoint("BOTTOMLEFT", self.SelectFrame, "TOPLEFT", 100, 0)
+		self.SaveButton = CreateFrame("BUTTON", nil, self.SelectFrame, "UIPanelButtonTemplate")
+		self:SetupButton(self.SaveButton, "Save Changes", 100)
+		self.SaveButton:SetPoint("BOTTOMLEFT", self.SelectFrame, "TOPLEFT", 200, 0)
 		self:ModelFrames(self.SelectFrame)
 		self.RandomButton = CreateFrame("BUTTON", nil, self.SelectFrame, "UIPanelButtonTemplate")
-		self:SetupButton(self.RandomButton, "Select Random", 100)
-		self.RandomButton:SetPoint("TOPRIGHT", self.SelectFrame, "TOPRIGHT")
-		self.DoneButton = CreateFrame("BUTTON", nil, self.SelectFrame, "UIPanelButtonTemplate")
-		self:SetupButton(self.DoneButton, "Done", 100)
-		self.DoneButton:SetPoint("BOTTOMRIGHT", self.SelectFrame, "BOTTOMRIGHT")
+		self:SetupButton(self.RandomButton, "Select Random", 130)
+		self.RandomButton:SetPoint("BOTTOMRIGHT", self.SelectFrame, "TOPRIGHT")
 		self.SelectSearchBox = CreateFrame("EDITBOX", nil, self.SelectFrame, "InputBoxTemplate")
-		self:SetupEditBox(self.SelectSearchBox, 120)
+		self:SetupEditBox(self.SelectSearchBox, 110)
 		self.SelectSearchBox:SetAutoFocus(false)
-		self.SelectSearchBox:SetPoint("BOTTOMRIGHT", self.SelectFrame, "TOPRIGHT", -100, 0)
+		self.SelectSearchBox:SetPoint("BOTTOMRIGHT", self.SelectFrame, "TOPRIGHT", -130, 30)
 		self.SelectSearchButton = CreateFrame("BUTTON", nil, self.SelectFrame, "UIPanelButtonTemplate")
-		self:SetupButton(self.SelectSearchButton, "Search", 100)
+		self:SetupButton(self.SelectSearchButton, "Search", 120)
 		self.SelectSearchButton:SetFrameStrata("TOOLTIP")
-		self.SelectSearchButton:SetPoint("BOTTOMRIGHT", self.SelectFrame, "TOPRIGHT", 0, 0)
+		self.SelectSearchButton:SetPoint("BOTTOMRIGHT", self.SelectFrame, "TOPRIGHT", -130, 0)
 		self.SelectSortButton = CreateFrame("BUTTON", nil, self.SelectFrame, "UIPanelButtonTemplate")
 		self:SetupButton(self.SelectSortButton, "Sort: A-Z", 100)
 		self.SelectSortButton:SetFrameStrata("TOOLTIP")
-		self.SelectSortButton:SetPoint("TOPLEFT", self.SelectFrame, "TOPLEFT", 0, 0)
+		self.SelectSortButton:SetPoint("BOTTOMLEFT", self.SelectFrame, "TOPLEFT", 0, 0)
 		self.Pages = CreateFrame("FRAME", nil, self.SelectFrame, nil)
-		self.Pages:SetPoint("BOTTOM", self.SelectFrame, "BOTTOM", 0, 20)
+		self.Pages:SetPoint("BOTTOM", self.SelectFrame, "BOTTOM", 0, 0)
 		self.Pages:SetFrameStrata("TOOLTIP")
 		self.Pages:SetWidth(150)
 		self.Pages:SetHeight(50)
@@ -649,92 +566,41 @@ function TransmogOutfits:FrameCreate(frame)
 		self.NextPageButton = CreateFrame("BUTTON", nil, self.Pages, "UIPanelButtonTemplate")
 		self:SetupButton(self.NextPageButton, ">", 25)
 		self.NextPageButton:SetPoint("RIGHT", self.Pages, "RIGHT", 0, 0)
+		self.SelectFrame:Hide()
 	end
-	self.SelectFrame:Hide()
+	self:SetupNameFrame(self.NameFrame, self.NameText)
 end
 
 function TransmogOutfits:ModelFrames(parent)
 	self.Models = {}
+	self.ModelsBg = {}
 	self.ModelTexts = {}
-	self.Models[1] = CreateFrame("ModelScene", "1", parent, BackdropTemplateMixin and "BackdropTemplate")
-	self.ModelTexts[1] = self.Models[1]:CreateFontString(nil, "OVERLAY", "GameFontWhite")
-	self:SetupModelFrame(self.Models[1], self.ModelTexts[1], -225, 100)
-	self.Models[2] = CreateFrame("ModelScene", "2", parent, BackdropTemplateMixin and "BackdropTemplate")
-	self.ModelTexts[2] = self.Models[2]:CreateFontString(nil, "OVERLAY", "GameFontWhite")
-	self:SetupModelFrame(self.Models[2], self.ModelTexts[2], -75, 100)
-	self.Models[3] = CreateFrame("ModelScene", "3", parent, BackdropTemplateMixin and "BackdropTemplate")
-	self.ModelTexts[3] = self.Models[3]:CreateFontString(nil, "OVERLAY", "GameFontWhite")
-	self:SetupModelFrame(self.Models[3], self.ModelTexts[3], 75, 100)
-	self.Models[4] = CreateFrame("ModelScene", "4", parent, BackdropTemplateMixin and "BackdropTemplate")
-	self.ModelTexts[4] = self.Models[4]:CreateFontString(nil, "OVERLAY", "GameFontWhite")
-	self:SetupModelFrame(self.Models[4], self.ModelTexts[4], 225, 100)
-	self.Models[5] = CreateFrame("ModelScene", "5", parent, BackdropTemplateMixin and "BackdropTemplate")
-	self.ModelTexts[5] = self.Models[5]:CreateFontString(nil, "OVERLAY", "GameFontWhite")
-	self:SetupModelFrame(self.Models[5], self.ModelTexts[5], -225, -100)
-	self.Models[6] = CreateFrame("ModelScene", "6", parent, BackdropTemplateMixin and "BackdropTemplate")
-	self.ModelTexts[6] = self.Models[6]:CreateFontString(nil, "OVERLAY", "GameFontWhite")
-	self:SetupModelFrame(self.Models[6], self.ModelTexts[6], -75, -100)
-	self.Models[7] = CreateFrame("ModelScene", "7", parent, BackdropTemplateMixin and "BackdropTemplate")
-	self.ModelTexts[7] = self.Models[7]:CreateFontString(nil, "OVERLAY", "GameFontWhite")
-	self:SetupModelFrame(self.Models[7], self.ModelTexts[7], 75, -100)
-	self.Models[8] = CreateFrame("ModelScene", "8", parent, BackdropTemplateMixin and "BackdropTemplate")
-	self.ModelTexts[8] = self.Models[8]:CreateFontString(nil, "OVERLAY", "GameFontWhite")
-	self:SetupModelFrame(self.Models[8], self.ModelTexts[8], 225, -100)
+	local index
+	for i = 1, 3 do
+		for j = 1, 3 do
+			index = j + (i - 1) * 3
+			self.Models[index] = CreateFrame("ModelScene", tostring(index), parent, BackdropTemplateMixin and "BackdropTemplate")
+			self.ModelsBg[index] = CreateFrame("FRAME", nil, self.Models[index], BackdropTemplateMixin and "BackdropTemplate")
+			self.ModelTexts[index] = self.ModelsBg[index]:CreateFontString(nil, "OVERLAY", "GameFontWhite")
+			self:SetupModelFrame(self.Models[index], self.ModelsBg[index], self.ModelTexts[index], -200 + (j - 1) * 200, 260 - (i - 1) * 245)
+		end
+	end
 end
 
 function TransmogOutfits:ModelFrameOnClick(button, down)
-	local index = TransmogOutfits.FoundOutfits[tonumber(self:GetName()) + 8 * (TransmogOutfits.Page - 1)].index
+	local index = TransmogOutfits.FoundOutfits[tonumber(self:GetName()) + 9 * (TransmogOutfits.Page - 1)].index
 	if button == "LeftButton" then
-		if IsControlKeyDown() then
-			TransmogOutfits:PreviewOutfit(index)
-		else
-			TransmogOutfits:ApplyOutfit(index)
-		end
+		TransmogOutfits:ApplyOutfit(index)
 	elseif button == "RightButton" then
 		TransmogOutfits.CurrentOutfit = index
 		TransmogOutfits:ContextMenu(self)
 	end
 end
 
-function TransmogOutfits:PreviewOutfit(index)
-	DressUpFrame_Show(DressUpFrame)
-	DressUpFrame.ModelScene:GetPlayerActor():Undress()
-	local blizzardOutfits = C_TransmogCollection.GetOutfits()
-	if blizzardOutfits[index] ~= nil then
-		local sources  = C_TransmogCollection.GetOutfitItemTransmogInfoList(blizzardOutfits[index])
-		for slotID, itemTransmogInfo in ipairs(sources) do
-			local canRecurse = false
-			if slotID == 17 then
-				local transmogLocation = TransmogUtil.GetTransmogLocation("MAINHANDSLOT", Enum.TransmogType.Appearance, Enum.TransmogModification.Main)
-				local mainHandCategoryID = C_Transmog.GetSlotEffectiveCategory(transmogLocation)
-				canRecurse = TransmogUtil.IsCategoryLegionArtifact(mainHandCategoryID)
-			end
-			DressUpFrame.ModelScene:GetPlayerActor():SetItemTransmogInfo(itemTransmogInfo, slotID)
-		end
-	else
-		local outfit = transmogOutfitOutfits[index - self.FoundBlizzardOutfits]
-		if outfit ~= nil then
-			self:SetTransmogInfo(DressUpFrame.ModelScene:GetPlayerActor(), outfit[1], nil, nil, 1)
-			self:SetTransmogInfo(DressUpFrame.ModelScene:GetPlayerActor(), outfit[3], outfit[33], nil, 3)
-			self:SetTransmogInfo(DressUpFrame.ModelScene:GetPlayerActor(), outfit[4], nil, nil, 4)
-			self:SetTransmogInfo(DressUpFrame.ModelScene:GetPlayerActor(), outfit[5], nil, nil, 5)
-			self:SetTransmogInfo(DressUpFrame.ModelScene:GetPlayerActor(), outfit[6], nil, nil, 6)
-			self:SetTransmogInfo(DressUpFrame.ModelScene:GetPlayerActor(), outfit[7], nil, nil, 7)
-			self:SetTransmogInfo(DressUpFrame.ModelScene:GetPlayerActor(), outfit[8], nil, nil, 8)
-			self:SetTransmogInfo(DressUpFrame.ModelScene:GetPlayerActor(), outfit[9], nil, nil, 9)
-			self:SetTransmogInfo(DressUpFrame.ModelScene:GetPlayerActor(), outfit[10], nil, nil, 10)
-			self:SetTransmogInfo(DressUpFrame.ModelScene:GetPlayerActor(), outfit[15], nil, nil, 15)
-			self:SetTransmogInfo(DressUpFrame.ModelScene:GetPlayerActor(), outfit[16], nil, outfit["enchant1"], 16)
-			self:SetTransmogInfo(DressUpFrame.ModelScene:GetPlayerActor(), outfit[17], nil, outfit["enchant2"], 17)
-			self:SetTransmogInfo(DressUpFrame.ModelScene:GetPlayerActor(), outfit[19], nil, nil, 19)
-		end
-	end
-end
-
-function TransmogOutfits:SetupModelFrame(frame, text, x, y)
+function TransmogOutfits:SetupModelFrame(frame, bg, text, x, y)
 	frame.actor = frame:CreateActor("actor")
-	frame:SetWidth(150)
-	frame:SetHeight(200)
+	frame:SetWidth(180)
+	frame:SetHeight(230)
 	frame:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", 
 					   edgeFile = "Interface/Tooltips/UI-Tooltip-Border", 
 					   tile = true,
@@ -752,8 +618,21 @@ function TransmogOutfits:SetupModelFrame(frame, text, x, y)
 	frame:SetPoint("CENTER", self.SelectFrame, "CENTER", x, y)
 	frame:EnableMouse(true)
 	frame:SetScript("OnMouseDown", self.ModelFrameOnClick)
+	bg:SetWidth(180)
+	bg:SetHeight(25)
+	bg:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", 
+					   edgeFile = "Interface/Tooltips/UI-Tooltip-Border", 
+					   tile = true,
+					   tileSize = 16,
+					   edgeSize = 16, 
+					   insets = {left = 1,
+								 right = 1,
+								 top = 1,
+								 bottom = 1}}) 
+	bg:SetBackdropColor(0, 0, 0, 0.8)
+	bg:SetPoint("TOP", frame, "TOP", 0, 0)
 	text:ClearAllPoints()
-	text:SetPoint("BOTTOM", frame, "BOTTOM", 0, 10)
+	text:SetPoint("CENTER", bg, "CENTER", 0, 0)
 	text:SetJustifyH("CENTER")
 	text:SetJustifyV("MIDDLE")
 end
@@ -769,7 +648,7 @@ function TransmogOutfits:SetupNameFrame(frame, text)
 								 top = 1,
 								 bottom = 1}}) 
 	frame:SetBackdropColor(0, 0, 0, 1)
-	frame:SetWidth(WardrobeTransmogFrame:GetWidth() - 100) 
+	frame:SetWidth(300) 
 	frame:SetHeight(25)
 	text:ClearAllPoints()
 	text:SetAllPoints(frame) 
@@ -781,7 +660,7 @@ end
 
 function TransmogOutfits:SetupButton(button, text, width)
 	button:SetText(text)
-	button:SetHeight(25)
+	button:SetHeight(30)
 	button:SetWidth(width)
 	button:ClearAllPoints()
 	button:SetScript("OnClick", self.ButtonOnClick)
@@ -812,33 +691,14 @@ function TransmogOutfits:SetupEditBox(editBox, width)
 	editBox:Show()
 end
 
-function TransmogOutfits:SetBlizzOut(info, val)
-	transmogOutfitBlizzard = val
-end
-
-function TransmogOutfits:GetBlizzOut(info)
-	return transmogOutfitBlizzard
-end
-
 function TransmogOutfits:OnInitialize()
 	self.Frame = CreateFrame("FRAME", nil, UIParent)
 	self.Frame:RegisterEvent("ADDON_LOADED")
-	self.Frame:RegisterEvent("TRANSMOGRIFY_UPDATE")
 	self.Frame:RegisterEvent("TRANSMOGRIFY_CLOSE")
 	self.Frame:SetScript("OnEvent", self.FrameOnEvent)
-	self.NameFrame = CreateFrame("FRAME", nil, self.Frame, BackdropTemplateMixin and "BackdropTemplate")
-	self.NameText = self.NameFrame:CreateFontString(nil, "OVERLAY", "GameFontWhite")
-	self.NameFrame:SetPoint("TOP", self.Frame, "TOP")
-	self.NewButton = CreateFrame("BUTTON", nil, self.Frame, "UIPanelButtonTemplate")
-	self:SetupButton(self.NewButton, "Save New", 100)
-	self.NewButton:SetPoint("BOTTOMLEFT", self.Frame, "BOTTOMLEFT")
-	self.SelectButton = CreateFrame("BUTTON", nil, self.Frame, "UIPanelButtonTemplate")
-	self:SetupButton(self.SelectButton, "Select Outfit", 100)
-	self.SelectButton:SetPoint("BOTTOM", self.Frame, "BOTTOM")
-	self.SaveButton = CreateFrame("BUTTON", nil, self.Frame, "UIPanelButtonTemplate")
-	self:SetupButton(self.SaveButton, "Save Current", 100)
-	self.SaveButton:SetPoint("BOTTOMRIGHT", self.Frame, "BOTTOMRIGHT")
-
+	if transmogOutfitOutfits == nil then
+		transmogOutfitOutfits = {}
+	end
 	self.NewFrame = CreateFrame("FRAME", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 	self:SetupPopupFrame(self.NewFrame, 250, 100)
 	self.NewFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
@@ -851,7 +711,6 @@ function TransmogOutfits:OnInitialize()
 	self.NewCancelButton = CreateFrame("BUTTON", nil, self.NewFrame, "UIPanelButtonTemplate")
 	self:SetupButton(self.NewCancelButton, "Cancel", 100)
 	self.NewCancelButton:SetPoint("CENTER", self.NewFrame, "CENTER", 50, -25)
-
 	self.RemoveFrame = CreateFrame("FRAME", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate") 
 	self:SetupPopupFrame(self.RemoveFrame, 250, 100)
 	self.RemoveFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
@@ -866,7 +725,6 @@ function TransmogOutfits:OnInitialize()
 	self.RemoveNoButton = CreateFrame("BUTTON", nil, self.RemoveFrame, "UIPanelButtonTemplate")
 	self:SetupButton(self.RemoveNoButton, "No", 100)
 	self.RemoveNoButton:SetPoint("CENTER", self.RemoveFrame, "CENTER", 55, -25)
-
 	self.RenameFrame = CreateFrame("FRAME", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 	self:SetupPopupFrame(self.RenameFrame, 250, 100)
 	self.RenameFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
@@ -879,29 +737,4 @@ function TransmogOutfits:OnInitialize()
 	self.RenameCancelButton = CreateFrame("BUTTON", nil, self.RenameFrame, "UIPanelButtonTemplate")
 	self:SetupButton(self.RenameCancelButton, "Cancel", 100)
 	self.RenameCancelButton:SetPoint("CENTER", self.RenameFrame, "CENTER", 50, -25)
-
-	local options = {
-		name = "Transmog Outfits",
-		handler = TransmogOutfits,
-		type = "group",
-		args = {
-			blizzout ={
-				name = "Use Blizzard Outfit slots first",
-				type = "toggle",
-				width = "full",
-				desc = "When enabled newly created outfits will be saved using Blizzard Outfit slots until you run out of them",
-				set = "SetBlizzOut",
-				get = "GetBlizzOut"
-			}
-		}
-	}
-	LibStub("AceConfig-3.0"):RegisterOptionsTable("TransmogOutfits", options, nil)
-	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("TransmogOutfits", "Transmog Outfits")
-
-	if transmogOutfitOutfits == nil then
-		transmogOutfitOutfits = {}
-	end
-	if transmogOutfitBlizzard == nil then
-		transmogOutfitBlizzard = false
-	end
 end
