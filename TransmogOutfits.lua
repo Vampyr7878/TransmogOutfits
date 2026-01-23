@@ -179,7 +179,9 @@ function TransmogOutfits:UpdateOutfit()
 		outfit["name"] = name
 		outfit[1] = self:GetTransmog(Enum.TransmogOutfitSlot.Head, Enum.TransmogType.Appearance)
 		outfit[3] = self:GetTransmog(Enum.TransmogOutfitSlot.ShoulderRight, Enum.TransmogType.Appearance)
-		outfit[33] = self:GetTransmog(Enum.TransmogOutfitSlot.ShoulderLeft, Enum.TransmogType.Appearance)
+		if TransmogFrame.CharacterPreview:GetSlotFrame(Enum.TransmogOutfitSlot.ShoulderLeft, Enum.TransmogType.Appearance) ~= nil then
+			outfit[33] = self:GetTransmog(Enum.TransmogOutfitSlot.ShoulderLeft, Enum.TransmogType.Appearance)
+	 	end
 		outfit[4] = self:GetTransmog(Enum.TransmogOutfitSlot.Body, Enum.TransmogType.Appearance)
 		outfit[5] = self:GetTransmog(Enum.TransmogOutfitSlot.Chest, Enum.TransmogType.Appearance)
 		outfit[6] = self:GetTransmog(Enum.TransmogOutfitSlot.Waist, Enum.TransmogType.Appearance)
@@ -211,7 +213,9 @@ function TransmogOutfits:NewOutfit()
 		outfit["name"] = name
 		outfit[1] = self:GetTransmog(Enum.TransmogOutfitSlot.Head, Enum.TransmogType.Appearance)
 		outfit[3] = self:GetTransmog(Enum.TransmogOutfitSlot.ShoulderRight, Enum.TransmogType.Appearance)
-		outfit[33] = self:GetTransmog(Enum.TransmogOutfitSlot.ShoulderLeft, Enum.TransmogType.Appearance)
+		if TransmogFrame.CharacterPreview:GetSlotFrame(Enum.TransmogOutfitSlot.ShoulderLeft, Enum.TransmogType.Appearance) ~= nil then
+			outfit[33] = self:GetTransmog(Enum.TransmogOutfitSlot.ShoulderLeft, Enum.TransmogType.Appearance)
+	 	end
 		outfit[4] = self:GetTransmog(Enum.TransmogOutfitSlot.Body, Enum.TransmogType.Appearance)
 		outfit[5] = self:GetTransmog(Enum.TransmogOutfitSlot.Chest, Enum.TransmogType.Appearance)
 		outfit[6] = self:GetTransmog(Enum.TransmogOutfitSlot.Waist, Enum.TransmogType.Appearance)
@@ -284,7 +288,9 @@ function TransmogOutfits:ApplyOutfit(index)
 		self.NameText:SetText(outfit["name"])
 		self:SetTransmog(Enum.TransmogOutfitSlot.Head, Enum.TransmogType.Appearance, outfit[1])
 		self:SetTransmog(Enum.TransmogOutfitSlot.ShoulderRight, Enum.TransmogType.Appearance, outfit[3])
-		self:SetTransmog(Enum.TransmogOutfitSlot.ShoulderLeft, Enum.TransmogType.Appearance, outfit[33])
+		if outfit[33] ~= nil then
+			self:SetTransmog(Enum.TransmogOutfitSlot.ShoulderLeft, Enum.TransmogType.Appearance, outfit[33])
+		end
 		self:SetTransmog(Enum.TransmogOutfitSlot.Body, Enum.TransmogType.Appearance, outfit[4])
 		self:SetTransmog(Enum.TransmogOutfitSlot.Chest, Enum.TransmogType.Appearance, outfit[5])
 		self:SetTransmog(Enum.TransmogOutfitSlot.Waist, Enum.TransmogType.Appearance, outfit[6])
