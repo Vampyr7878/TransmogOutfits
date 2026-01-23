@@ -1,6 +1,6 @@
 ## Interface: 120000
 ## Title: Transmog Outfits
-## Notes: Allows to save more than 20 transmog outfits per character
+## Notes: Allows to save more transmogs for character
 ## Author: Vampyr78
 ## Version: 4.0
 ## SavedVariables: transmogOutfitBlizzard

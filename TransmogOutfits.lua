@@ -407,7 +407,7 @@ function TransmogOutfits:SetTransmog(slot, type, transmog)
 	if info == nil then
 		return
 	end
-	if string.find(info.name, "^Hidden") then
+	if info.isHideVisual then
 		display = 3
 	end
 	if slot == Enum.TransmogOutfitSlot.WeaponMainHand or slot == Enum.TransmogOutfitSlot.WeaponOffHand then
