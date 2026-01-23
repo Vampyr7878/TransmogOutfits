@@ -2,7 +2,7 @@
 ## Title: Transmog Outfits
 ## Notes: Allows to save more transmogs for character
 ## Author: Vampyr78
-## Version: 4.0
+## Version: 4.0.1
 ## SavedVariables: transmogOutfitBlizzard
 ## SavedVariablesPerCharacter: transmogOutfitOutfits
 ## IconTexture: Interface\Icons\achievement_transmog_collections.blp
