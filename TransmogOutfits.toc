@@ -1,8 +1,8 @@
-## Interface: 120000
+## Interface: 120001
 ## Title: Transmog Outfits
 ## Notes: Allows to save more transmogs for character
 ## Author: Vampyr78
-## Version: 4.0.2
+## Version: 4.0.3
 ## SavedVariables: transmogOutfitBlizzard
 ## SavedVariablesPerCharacter: transmogOutfitOutfits
 ## IconTexture: Interface\Icons\achievement_transmog_collections.blp
